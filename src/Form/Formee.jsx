@@ -24,17 +24,86 @@ const Formee = () => {
 
     }
 
+    // validation
+
+    const validation = () => {
+        const newErrors = {};
+
+        const { name, email, age, password, confirmpassword, gender } = formData;
+
+        // name validation
+
+        if (!name.trim()) newErrors.name = "name is required";
+        else if (!/^[A-Za-z\s]*$/.test(name)) newErrors.name = "Name should only contain alphabets"
+
+        // email validation
+
+
+        if (!email) newErrors.email = "Email is required";
+        else if (!/^\S+@\S+\.\S+$/.test(email)) newErrors.email = "Email is invalid"
+
+        // age  validation
+
+        if (!age) newErrors.age = "Age is required";
+        else if (isNaN(age) || age < 1 || age > 120) newErrors.age = "Age must be between 1 and 120";
+
+        // password  validation
+
+        if (!password) newErrors.password = "password is required";
+        else if (password.length < 6) newErrors.password = "password must be 6 charecters";
+
+        // confirm password  validation
+
+        if (!confirmpassword) newErrors.confirmpassword = " please confirm your password ";
+        else if (password !== confirmpassword) newErrors.confirmpassword = "password do not match";
+
+
+        // gender validation
+
+        if (!gender) newErrors.gender = "Gender is required";
+
+        return newErrors;
+
+
+    }
+
+    const handlesubmit = (e) => {
+        e.preventDefault();
+
+        const validationErrors = validation();
+
+        if (Object.keys(validationErrors).length > 0) {
+            setError(validationErrors);
+        } else {
+            setError({})
+            alert("Form submitted succesfully")
+            console.log('form data', formData);
+
+            setFormData({
+                name: '',
+                email: '',
+                age: '',
+                password: '',
+                confirmpassword: '',
+                gender: ''
+            })
+
+        }
+
+    }
+
     return (
-        <div>
-            <form>
+       
+            <form onSubmit={handlesubmit}>
                 {/* name */}
                 <div>
                     <input type="text"
-                    name='name'
+                        name='name'
                         value={formData.name}
                         placeholder='Name'
                         onChange={handleChange}
-                          />
+                    />
+                    {error.name && <p style={{ color: 'red' }}>{error.name}</p>}
                 </div>
                 {/* email */}
 
@@ -45,6 +114,7 @@ const Formee = () => {
                         value={formData.email}
                         placeholder='email'
                         onChange={handleChange} />
+                    {error.email && <p style={{ color: 'red' }}>{error.email}</p>}
                 </div>
                 {/* age */}
                 <div>
@@ -53,6 +123,7 @@ const Formee = () => {
                         value={formData.age}
                         placeholder=' Your age'
                         onChange={handleChange} />
+                    {error.age && <p style={{ color: 'red' }}>{error.age}</p>}
                 </div>
                 {/* password */}
                 <div>
@@ -61,6 +132,7 @@ const Formee = () => {
                         value={formData.password}
                         placeholder='Your password'
                         onChange={handleChange} />
+                    {error.password && <p style={{ color: 'red' }}>{error.password}</p>}
                 </div>
                 {/* confirmpassword */}
 
@@ -70,6 +142,7 @@ const Formee = () => {
                         value={formData.confirmpassword}
                         placeholder='Confirm password'
                         onChange={handleChange} />
+                    {error.confirmpassword && <p style={{ color: 'red' }}>{error.confirmpassword}</p>}
                 </div>
 
                 {/* gender */}
@@ -82,6 +155,7 @@ const Formee = () => {
                             value='male'
                             checked={formData.gender === 'male'}
                             onChange={handleChange} />
+                     
                         Male
                     </label>
 
@@ -90,9 +164,12 @@ const Formee = () => {
                         <input type="radio"
                             name='gender'
                             value='female'
-                            checked={formData.gender === 'female'} 
-                            onChange={handleChange}/>
-                        female
+                            checked={formData.gender === 'female'}
+                            onChange={handleChange} />Female
+
+                        {error.gender && <p style={{ color: 'red' }}>{error.gender}</p>}
+
+                        
 
 
                     </label>
@@ -106,7 +183,7 @@ const Formee = () => {
 
             </form>
 
-        </div>
+       
     )
 }
 
